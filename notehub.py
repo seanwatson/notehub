@@ -93,7 +93,14 @@ __date__ = '18 January 2014'
 
 from hashlib import md5
 import json
-import urllib
+import sys
+
+if sys.version_info[0] == 2:
+    from urllib import urlencode
+    from urllib import urlopen
+else:
+    from urllib.parse import urlencode
+    from urllib.request import urlopen
 
 
 class NotehubError(Exception):
@@ -150,24 +157,32 @@ class Notehub(object):
         
         # Encode the params and data
         if params:
-            path = '?' + urllib.urlencode(params)
+            path = '?' + urlencode(params)
         if data:
-            post_body = urllib.urlencode(data)
+            post_body = urlencode(data).encode('utf-8')
 
         url = self.BASE_URL + path
 
         try:
             # Make the request
             if post_body:
-                req = urllib.urlopen(url, post_body)
+                req = urlopen(url, post_body)
             else:
-                req = urllib.urlopen(url)
+                req = urlopen(url)
 
-            # Check the response codes
+            # Check the response code
             if req.getcode() != 200:
                 raise NotehubError('Server returned non-200 response code: '
                                     + str(req.getcode()))
-            resp = json.load(req)
+
+            # Parse the response
+            if sys.version_info[0] == 2:
+                resp = json.load(req)
+            else:
+                encoding = req.headers.get_content_charset()
+                resp = json.loads(req.read().decode(encoding))
+
+            # Check the status
             if resp['status']['success'] != True:
                 raise NotehubError(
                     'Non successful status: ' + resp['status']['message'])
@@ -186,7 +201,7 @@ class Notehub(object):
             text: The text to be included in the signature.
         """
         full_text = self.pid + self.psk + text
-        return md5(full_text).hexdigest()
+        return md5(full_text.encode('utf-8')).hexdigest()
 
 
     def get_note(self, note_id):
@@ -235,7 +250,7 @@ class Notehub(object):
                 'version': self.version,
             }
         if password:
-            data['password'] = md5(password).hexdigest()
+            data['password'] = md5(password.encode('utf-8')).hexdigest()
         return self._request(data=data)
 
     def update_note(self, note_id, new_note_text, password):
@@ -262,7 +277,7 @@ class Notehub(object):
                 'pid': self.pid,
                 'signature': self._get_signature(
                     note_id + new_note_text + password),
-                'password': md5(password).hexdigest(),
+                'password': md5(password.encode('utf-8')).hexdigest(),
                 'version': self.version,
             }
         return self._request(data=data)
