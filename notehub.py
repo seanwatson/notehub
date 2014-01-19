@@ -39,6 +39,7 @@ response codes.
 *************************************************************
 
 Example use:
+
     from notehub import Notehub
     from notehub import NotehubError
 
@@ -50,29 +51,26 @@ Example use:
     # get_note
     try:
         note = nh.get_note('2014 1 18 test-7')
-        for k,v in note.items():
-            print k, ':', v
+        print(note)
     except NotehubError as e:
-        print e
+        print(e)
 
     # create_note
     note_text = 'Test note 123.'
     try:
         note = nh.create_note(note_text)
-        for k,v in note.items():
-            print k, ':', v
+        print(note)
     except NotehubError as e:
-        print e
+        print(e)
 
     # create_note with password
     note_text = 'Test note 123.'
     password = 'abc123'
     try:
         note = nh.create_note(note_text, password)
-        for k,v in note.items():
-            print k, ':', v
+        print(note)
     except NotehubError as e:
-        print e
+        print(e)
 
     # update_note
     note_id = '2014/1/18/test-7'
@@ -80,10 +78,9 @@ Example use:
     password = 'abc123'
     try:
         note = nh.update_note(note_id, new_note_text, password)
-        for k,v in note.items():
-            print k, ':', v
+        print(note)
     except NotehubError as e:
-        print e
+        print(e)
 
 """
 
