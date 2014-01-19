@@ -1,4 +1,4 @@
-from setuptools.import setup
+from setuptools import setup
 readme = open('README.md').read()
 setup(name='notehub',
       version='0.1',
