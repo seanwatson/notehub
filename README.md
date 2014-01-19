@@ -16,7 +16,6 @@ Example use:
 
     from notehub import Notehub
     from notehub import NotehubError
-    import pprint
 
     PID = 'example_pid' # Replace with your PID
     PSK = 'example_psk' # Replace with your PSK
@@ -26,7 +25,8 @@ Example use:
     # get_note
     try:
         note = nh.get_note('2014 1 18 test-7')
-        pprint.pprint(note)
+        for k,v in note.items():
+            print k, ':', v
     except NotehubError as e:
         print e
 
@@ -34,7 +34,8 @@ Example use:
     note_text = 'Test note 123.'
     try:
         note = nh.create_note(note_text)
-        pprint.pprint(note)
+        for k,v in note.items():
+            print k, ':', v
     except NotehubError as e:
         print e
 
@@ -43,7 +44,8 @@ Example use:
     password = 'abc123'
     try:
         note = nh.create_note(note_text, password)
-        pprint.pprint(note)
+        for k,v in note.items():
+            print k, ':', v
     except NotehubError as e:
         print e
 
@@ -53,7 +55,8 @@ Example use:
     password = 'abc123'
     try:
         note = nh.update_note(note_id, new_note_text, password)
-        pprint.pprint(note)
+        for k,v in note.items():
+            print k, ':', v
     except NotehubError as e:
         print e
 
