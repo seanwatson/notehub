@@ -27,6 +27,7 @@
 #    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 #    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from copy import deepcopy
 import json
 import notehub
 import unittest
@@ -48,7 +49,7 @@ SAMPLE_GET_NOTE = {u'title': u'Test',
                    u'publisher': None,
                    u'note': u'#Test\r\n\r\nThis is a test note\r\n\r\n## Test Header 2',
                    u'longURL': u'http://notehub.org/2014/1/18/test-7',
-                   u'shortURL': u'http://notehub.org/',
+                   u'shortURL': u'http://notehub.org/jk007',
                    u'status': {u'success': True,
                                u'message': ''},
                    }
@@ -70,20 +71,20 @@ class TestNotehub(unittest.TestCase):
 
     def setUp(self):
         self.nh = notehub.Notehub(PID,PSK)
-        self.real_urlopen = notehub.urlopen
+        self.real_requests = notehub.requests
 
     def tearDown(self):
-        notehub.urlopen = self.real_urlopen
+        notehub.requests = self.real_requests
 
     def test_get_note(self):
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not TEST_AGAINST_LIVE:
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(SAMPLE_GET_NOTE))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: deepcopy(SAMPLE_GET_NOTE))
+            notehub.requests.get = Mock(return_value=mock_response)
         note = self.nh.get_note('2014 1 18 test-7')
-        expected_note = SAMPLE_GET_NOTE.copy()
+        expected_note = deepcopy(SAMPLE_GET_NOTE)
         del expected_note['status']
         # Views are subject to change so omit them from the check
         del note['statistics']['views']
@@ -91,15 +92,15 @@ class TestNotehub(unittest.TestCase):
         self.assertEqual(expected_note, note)
 
     def test_get_note_with_bad_note_id(self):
-        bad_get_note_response = SAMPLE_GET_NOTE.copy()
+        bad_get_note_response = deepcopy(SAMPLE_GET_NOTE)
         bad_get_note_response['status'] = {'success': False,
                                            'message': 'Bad noteID.'}
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not TEST_AGAINST_LIVE:
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(bad_get_note_response))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: bad_get_note_response)
+            notehub.requests.get = Mock(return_value=mock_response)
         with self.assertRaises(notehub.NotehubError):
             self.nh.get_note('not a real noteId')
 
@@ -107,9 +108,9 @@ class TestNotehub(unittest.TestCase):
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not (TEST_AGAINST_LIVE and PID and PSK):
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(SAMPLE_CREATE_NOTE))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: deepcopy(SAMPLE_CREATE_NOTE))
+            notehub.requests.post = Mock(return_value=mock_response)
         note = self.nh.create_note('some test text')
         # Since the date and ID change, just check that a URL comes back
         self.assertEqual('http://notehub.org/', note['longURL'][:19])
@@ -121,9 +122,9 @@ class TestNotehub(unittest.TestCase):
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not (TEST_AGAINST_LIVE and PID and PSK):
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(SAMPLE_CREATE_NOTE))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: deepcopy(SAMPLE_CREATE_NOTE))
+            notehub.requests.post = Mock(return_value=mock_response)
         note = self.nh.create_note('some test text', 'abc123')
         # Since the date and ID change, just check that a URL comes back
         self.assertEqual('http://notehub.org/', note['longURL'][:19])
@@ -135,40 +136,40 @@ class TestNotehub(unittest.TestCase):
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not (TEST_AGAINST_LIVE and PID and PSK):
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(SAMPLE_UPDATE_NOTE))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: deepcopy(SAMPLE_UPDATE_NOTE))
+            notehub.requests.put = Mock(return_value=mock_response)
         note = self.nh.update_note('2014 1 18 test-7', 'the new text',
                                    'abc123')
-        expected_note = SAMPLE_UPDATE_NOTE.copy()
+        expected_note = deepcopy(SAMPLE_UPDATE_NOTE)
         del expected_note['status']
         self.assertEqual(expected_note, note)
 
     def test_bad_pid(self):
-        bad_create_note_response = SAMPLE_CREATE_NOTE.copy()
+        bad_create_note_response = deepcopy(SAMPLE_CREATE_NOTE)
         bad_create_note_response['status'] = {'success': False,
                                               'message': 'Bad PID.'}
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not TEST_AGAINST_LIVE:
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(bad_create_note_response))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: bad_create_note_response)
+            notehub.requests.post = Mock(return_value=mock_response)
         self.nh.pid = 'example of not a pid'
         with self.assertRaises(notehub.NotehubError):
             self.nh.create_note('some test text')
         
 
     def test_bad_psk(self):
-        bad_create_note_response = SAMPLE_CREATE_NOTE.copy()
+        bad_create_note_response = deepcopy(SAMPLE_CREATE_NOTE)
         bad_create_note_response['status'] = {'success': False,
                                               'message': 'Bad PID.'}
         # If you don't want to test against live just have the request call
         # return a mock with a 200 response code and the sample json
         if not TEST_AGAINST_LIVE:
-            mock_response = Mock(getcode=lambda: 200,
-                                 read=lambda: json.dumps(bad_create_note_response))
-            notehub.urlopen = Mock(return_value=mock_response)
+            mock_response = Mock(status_code=200,
+                                 json=lambda: bad_create_note_response)
+            notehub.requests.post = Mock(return_value=mock_response)
         self.nh.psk = 'example of not a psk'
         with self.assertRaises(notehub.NotehubError):
             self.nh.create_note('some test text')

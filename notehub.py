@@ -90,14 +90,8 @@ __date__ = '18 January 2014'
 
 from hashlib import md5
 import json
+import requests
 import sys
-
-if sys.version_info[0] == 2:
-    from urllib import urlencode
-    from urllib import urlopen
-else:
-    from urllib.parse import urlencode
-    from urllib.request import urlopen
 
 
 class NotehubError(Exception):
@@ -128,7 +122,7 @@ class Notehub(object):
         self.psk = psk
         self.version = version
     
-    def _request(self, params={}, data={}):
+    def _request(self, method, params={}, data={}):
         """Private. Preforms operations common to all API calls.
 
         Preforms the operations common to all API calls such as contructing the
@@ -137,6 +131,7 @@ class Notehub(object):
         an HTTP POST request will be used.
 
         Args:
+            method: The HTTP method to use, GET, POST or PUT
             params: HTTP GET parameters
             data: HTTP POST data
 
@@ -149,35 +144,22 @@ class Notehub(object):
                 contains a string explaining what went wrong.
         """
 
-        path = ''
-        post_body = ''
-        
-        # Encode the params and data
-        if params:
-            path = '?' + urlencode(params)
-        if data:
-            post_body = urlencode(data).encode('utf-8')
-
-        url = self.BASE_URL + path
-
         try:
             # Make the request
-            if post_body:
-                req = urlopen(url, post_body)
-            else:
-                req = urlopen(url)
+            if method == 'GET':
+                req = requests.get(self.BASE_URL, params=params)
+            elif method == 'POST':
+                req = requests.post(self.BASE_URL, data=data)
+            else: # PUT
+                req = requests.put(self.BASE_URL, data=data)
 
             # Check the response code
-            if req.getcode() != 200:
+            if req.status_code != requests.codes.ok:
                 raise NotehubError('Server returned non-200 response code: '
-                                    + str(req.getcode()))
+                                    + str(req.status_code))
 
             # Parse the response
-            if sys.version_info[0] == 2:
-                resp = json.load(req)
-            else:
-                encoding = req.headers.get_content_charset()
-                resp = json.loads(req.read().decode(encoding))
+            resp = req.json()
 
             # Check the status
             if resp['status']['success'] != True:
@@ -185,7 +167,7 @@ class Notehub(object):
                     'Non successful status: ' + resp['status']['message'])
                 
             del resp['status']
-        except (IOError, KeyError) as e:
+        except (IOError, KeyError, ValueError) as e:
             # If there is an error opening the connection or deleting the key
             # wrap the error in a NotehubError and re-raise it.
             raise NotehubError(str(e))
@@ -221,7 +203,7 @@ class Notehub(object):
         params = {'noteID': note_id,
                   'version': self.version,
             }
-        return self._request(params=params)
+        return self._request('GET', params=params)
 
     def create_note(self, note_text, password=''):
         """Creates a note on Notehub.org with the given text.
@@ -248,7 +230,7 @@ class Notehub(object):
             }
         if password:
             data['password'] = md5(password.encode('utf-8')).hexdigest()
-        return self._request(data=data)
+        return self._request('POST', data=data)
 
     def update_note(self, note_id, new_note_text, password):
         """Edits a note on Notehub.org.
@@ -278,5 +260,5 @@ class Notehub(object):
                 'password': encoded_password,
                 'version': self.version,
             }
-        return self._request(data=data)
+        return self._request('PUT', data=data)
 
