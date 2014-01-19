@@ -4,9 +4,15 @@ notehub
 Installation
 ------------
 
-To install run:
+To install with pip run:
 
     pip install notehub
+
+Or you can download the source and run:
+
+    python setup.py install
+
+*Running these commands may require administrator privledges.*
 
 Getting Started
 ---------------
