@@ -34,38 +34,43 @@ from notehub import NotehubError
 PID = 'example_pid' # Replace with your PID
 PSK = 'example_psk' # Replace with your PSK
 
-nh = Notehub(PID, PSK)
+def main():
+    nh = Notehub(PID, PSK)
 
-# get_note
-try:
-    note = nh.get_note('2014 1 18 test-7')
-    print(note)
-except NotehubError as e:
-    print(e)
+    # get_note
+    try:
+        note = nh.get_note('2014 1 18 test-7')
+        print(note)
+    except NotehubError as e:
+        print(e)
 
-# create_note
-note_text = 'Test note 123.'
-try:
-    note = nh.create_note(note_text)
-    print(note)
-except NotehubError as e:
-    print(e)
+    # create_note
+    note_text = 'Test note 123.'
+    try:
+        note = nh.create_note(note_text)
+        print(note)
+    except NotehubError as e:
+        print(e)
 
-# create_note with password
-note_text = 'Test note 123.'
-password = 'abc123'
-try:
-    note = nh.create_note(note_text, password)
-    print(note)
-except NotehubError as e:
-    print(e)
+    # create_note with password
+    note_text = 'Test note 123.'
+    password = 'abc123'
+    try:
+        note = nh.create_note(note_text, password)
+        print(note)
+    except NotehubError as e:
+        print(e)
 
-# update_note
-note_id = '2014/1/18/test-7'
-new_note_text = 'New note text.'
-password = 'abc123'
-try:
-    note = nh.update_note(note_id, new_note_text, password)
-    print(note)
-except NotehubError as e:
-    print(e)
+    # update_note
+    note_id = '2014/1/18/test-7'
+    new_note_text = 'New note text.'
+    password = 'abc123'
+    try:
+        note = nh.update_note(note_id, new_note_text, password)
+        print(note)
+    except NotehubError as e:
+        print(e)
+
+
+if __name__ == '__main__':
+    main()
