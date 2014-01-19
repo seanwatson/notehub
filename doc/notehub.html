@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module notehub</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>notehub</strong></big></big> (18 January 2014)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/sean/projects/notehub/notehub.py">/home/sean/projects/notehub/notehub.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;simple&nbsp;wrapper&nbsp;for&nbsp;the&nbsp;<a href="#Notehub">Notehub</a>.org&nbsp;api.<br>
+&nbsp;<br>
+A&nbsp;wrapper&nbsp;for&nbsp;the&nbsp;<a href="#Notehub">Notehub</a>.org&nbsp;api&nbsp;that&nbsp;simplifies&nbsp;much&nbsp;of&nbsp;the&nbsp;work&nbsp;needed&nbsp;to<br>
+make&nbsp;a&nbsp;call.&nbsp;The&nbsp;wrapper&nbsp;handles&nbsp;the&nbsp;work&nbsp;of&nbsp;adding&nbsp;necessary&nbsp;parameters,<br>
+hashing&nbsp;passwords,&nbsp;generating&nbsp;signatures,&nbsp;encoding&nbsp;the&nbsp;data&nbsp;and&nbsp;checking<br>
+response&nbsp;codes.<br>
+&nbsp;<br>
+*************************************************************<br>
+***You&nbsp;will&nbsp;need&nbsp;a&nbsp;PID&nbsp;and&nbsp;PSK&nbsp;from&nbsp;<a href="http://notehub.org/api">http://notehub.org/api</a>***<br>
+***in&nbsp;order&nbsp;to&nbsp;use&nbsp;the&nbsp;create_note&nbsp;and&nbsp;update_note&nbsp;methods.**<br>
+*************************************************************<br>
+&nbsp;<br>
+Example&nbsp;use:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;notehub&nbsp;import&nbsp;<a href="#Notehub">Notehub</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;notehub&nbsp;import&nbsp;<a href="#NotehubError">NotehubError</a><br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;PID&nbsp;=&nbsp;'example_pid'&nbsp;#&nbsp;Replace&nbsp;with&nbsp;your&nbsp;PID<br>
+&nbsp;&nbsp;&nbsp;&nbsp;PSK&nbsp;=&nbsp;'example_psk'&nbsp;#&nbsp;Replace&nbsp;with&nbsp;your&nbsp;PSK<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nh&nbsp;=&nbsp;<a href="#Notehub">Notehub</a>(PID,&nbsp;PSK)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get_note<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.get_note('2014&nbsp;1&nbsp;18&nbsp;test-7')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create_note<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_text&nbsp;=&nbsp;'Test&nbsp;note&nbsp;123.'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.create_note(note_text)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create_note&nbsp;with&nbsp;password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_text&nbsp;=&nbsp;'Test&nbsp;note&nbsp;123.'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;=&nbsp;'abc123'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.create_note(note_text,&nbsp;password)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;update_note<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_id&nbsp;=&nbsp;'2014/1/18/test-7'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new_note_text&nbsp;=&nbsp;'New&nbsp;note&nbsp;text.'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;=&nbsp;'abc123'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.update_note(note_id,&nbsp;new_note_text,&nbsp;password)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#Exception">builtins.Exception</a>(<a href="builtins.html#BaseException">builtins.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="notehub.html#NotehubError">NotehubError</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="notehub.html#Notehub">Notehub</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Notehub">class <strong>Notehub</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;wrapper&nbsp;for&nbsp;the&nbsp;<a href="#Notehub">Notehub</a>.org&nbsp;api.<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pid:&nbsp;The&nbsp;publisher&nbsp;ID&nbsp;received&nbsp;from&nbsp;<a href="#Notehub">Notehub</a>.org.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;psk:&nbsp;The&nbsp;publisher&nbsp;secret&nbsp;key&nbsp;received&nbsp;from&nbsp;<a href="#Notehub">Notehub</a>.org.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;version:&nbsp;The&nbsp;api&nbsp;version&nbsp;to&nbsp;use.&nbsp;(Default:&nbsp;'1.0').<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Notehub-__init__"><strong>__init__</strong></a>(self, pid, psk, version<font color="#909090">='1.0'</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#Notehub">Notehub</a>&nbsp;<a href="builtins.html#object">object</a>.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pid:&nbsp;The&nbsp;publisher&nbsp;ID&nbsp;received&nbsp;from&nbsp;<a href="#Notehub">Notehub</a>.org.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;psk:&nbsp;The&nbsp;publisher&nbsp;secret&nbsp;key&nbsp;received&nbsp;from&nbsp;<a href="#Notehub">Notehub</a>.org.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;version:&nbsp;Optional.&nbsp;Default&nbsp;'1.0'.&nbsp;Which&nbsp;version&nbsp;of&nbsp;the&nbsp;API&nbsp;to&nbsp;use.</tt></dd></dl>
+
+<dl><dt><a name="Notehub-create_note"><strong>create_note</strong></a>(self, note_text, password<font color="#909090">=''</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;note&nbsp;on&nbsp;<a href="#Notehub">Notehub</a>.org&nbsp;with&nbsp;the&nbsp;given&nbsp;text.<br>
+&nbsp;<br>
+Makes&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#Notehub">Notehub</a>.orgs&nbsp;CREATE&nbsp;NOTE&nbsp;api.&nbsp;To&nbsp;edit&nbsp;a&nbsp;note&nbsp;later<br>
+a&nbsp;password&nbsp;must&nbsp;be&nbsp;given.&nbsp;If&nbsp;successful&nbsp;the&nbsp;note's&nbsp;ID&nbsp;and&nbsp;some&nbsp;URLs<br>
+linking&nbsp;too&nbsp;it&nbsp;will&nbsp;be&nbsp;returned.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_text:&nbsp;The&nbsp;ID&nbsp;of&nbsp;the&nbsp;note&nbsp;to&nbsp;request.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password:&nbsp;Optional.&nbsp;A&nbsp;password&nbsp;to&nbsp;allow&nbsp;for&nbsp;updating&nbsp;the&nbsp;note.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dict&nbsp;populated&nbsp;from&nbsp;the&nbsp;JSON&nbsp;response&nbsp;of&nbsp;the&nbsp;API&nbsp;call.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NotehubError">NotehubError</a>:&nbsp;There&nbsp;was&nbsp;a&nbsp;problem&nbsp;making&nbsp;the&nbsp;call.&nbsp;Check&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Notehub-get_note"><strong>get_note</strong></a>(self, note_id)</dt><dd><tt>Retreives&nbsp;the&nbsp;text&nbsp;of&nbsp;a&nbsp;note&nbsp;on&nbsp;<a href="#Notehub">Notehub</a>.org.<br>
+&nbsp;<br>
+Makes&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#Notehub">Notehub</a>.org's&nbsp;GET&nbsp;NOTE&nbsp;api.&nbsp;This&nbsp;returns<br>
+the&nbsp;text&nbsp;of&nbsp;a&nbsp;note&nbsp;from&nbsp;a&nbsp;given&nbsp;note&nbsp;ID.&nbsp;It&nbsp;also&nbsp;returns<br>
+some&nbsp;URLs&nbsp;that&nbsp;link&nbsp;to&nbsp;the&nbsp;note&nbsp;and&nbsp;some&nbsp;statistics&nbsp;about&nbsp;it.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_id:&nbsp;The&nbsp;ID&nbsp;of&nbsp;the&nbsp;note&nbsp;to&nbsp;request.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dict&nbsp;populated&nbsp;from&nbsp;the&nbsp;JSON&nbsp;response&nbsp;of&nbsp;the&nbsp;API&nbsp;call.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NotehubError">NotehubError</a>:&nbsp;There&nbsp;was&nbsp;a&nbsp;problem&nbsp;making&nbsp;the&nbsp;call.&nbsp;Check&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Notehub-update_note"><strong>update_note</strong></a>(self, note_id, new_note_text, password)</dt><dd><tt>Edits&nbsp;a&nbsp;note&nbsp;on&nbsp;<a href="#Notehub">Notehub</a>.org.<br>
+&nbsp;<br>
+Makes&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#Notehub">Notehub</a>.org's&nbsp;UPDATE&nbsp;NOTE&nbsp;api.&nbsp;The&nbsp;note&nbsp;must&nbsp;have<br>
+been&nbsp;originally&nbsp;created&nbsp;with&nbsp;a&nbsp;password&nbsp;to&nbsp;allow&nbsp;updating.&nbsp;If<br>
+successful&nbsp;some&nbsp;URLs&nbsp;that&nbsp;link&nbsp;to&nbsp;the&nbsp;note&nbsp;will&nbsp;be&nbsp;returned.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note_id:&nbsp;The&nbsp;ID&nbsp;of&nbsp;the&nbsp;note&nbsp;to&nbsp;request.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new_note_text:&nbsp;The&nbsp;text&nbsp;to&nbsp;replace&nbsp;the&nbsp;existing&nbsp;text&nbsp;with.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password:&nbsp;The&nbsp;password&nbsp;the&nbsp;note&nbsp;was&nbsp;created&nbsp;with.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dict&nbsp;populated&nbsp;from&nbsp;the&nbsp;JSON&nbsp;response&nbsp;of&nbsp;the&nbsp;API&nbsp;call.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#NotehubError">NotehubError</a>:&nbsp;There&nbsp;was&nbsp;a&nbsp;problem&nbsp;making&nbsp;the&nbsp;call.&nbsp;Check&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>BASE_URL</strong> = 'http://notehub.org/api/note'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NotehubError">class <strong>NotehubError</strong></a>(<a href="builtins.html#Exception">builtins.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="builtins.html#Exception">Exception</a>&nbsp;thrown&nbsp;by&nbsp;<a href="#Notehub">Notehub</a>&nbsp;methods&nbsp;when&nbsp;an&nbsp;error&nbsp;occurs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="notehub.html#NotehubError">NotehubError</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><a name="NotehubError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#NotehubError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="NotehubError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="NotehubError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="NotehubError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NotehubError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="NotehubError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="NotehubError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NotehubError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#NotehubError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="NotehubError-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt><a href="builtins.html#Exception">Exception</a>.<a href="#NotehubError-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-md5"><strong>md5</strong></a> = openssl_md5(...)</dt><dd><tt>Returns&nbsp;a&nbsp;md5&nbsp;hash&nbsp;<a href="builtins.html#object">object</a>;&nbsp;optionally&nbsp;initialized&nbsp;with&nbsp;a&nbsp;string</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Sean&nbsp;Watson</td></tr></table>
+</body></html>
