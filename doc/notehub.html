@@ -22,6 +22,7 @@ response&nbsp;codes.<br>
 *************************************************************<br>
 &nbsp;<br>
 Example&nbsp;use:<br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;notehub&nbsp;import&nbsp;<a href="#Notehub">Notehub</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;notehub&nbsp;import&nbsp;<a href="#NotehubError">NotehubError</a><br>
 &nbsp;<br>
@@ -33,29 +34,26 @@ Example&nbsp;use:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;get_note<br>
 &nbsp;&nbsp;&nbsp;&nbsp;try:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.get_note('2014&nbsp;1&nbsp;18&nbsp;test-7')<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(note)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(e)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create_note<br>
 &nbsp;&nbsp;&nbsp;&nbsp;note_text&nbsp;=&nbsp;'Test&nbsp;note&nbsp;123.'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;try:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.create_note(note_text)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(note)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(e)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;create_note&nbsp;with&nbsp;password<br>
 &nbsp;&nbsp;&nbsp;&nbsp;note_text&nbsp;=&nbsp;'Test&nbsp;note&nbsp;123.'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;=&nbsp;'abc123'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;try:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.create_note(note_text,&nbsp;password)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(note)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(e)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;update_note<br>
 &nbsp;&nbsp;&nbsp;&nbsp;note_id&nbsp;=&nbsp;'2014/1/18/test-7'<br>
@@ -63,10 +61,9 @@ Example&nbsp;use:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;=&nbsp;'abc123'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;try:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;=&nbsp;nh.update_note(note_id,&nbsp;new_note_text,&nbsp;password)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k,v&nbsp;in&nbsp;note.items():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;k,&nbsp;':',&nbsp;v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(note)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;except&nbsp;<a href="#NotehubError">NotehubError</a>&nbsp;as&nbsp;e:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;e</tt></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(e)</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
