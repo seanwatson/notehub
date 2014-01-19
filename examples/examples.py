@@ -62,7 +62,7 @@ def main():
         print(e)
 
     # update_note
-    note_id = '2014/1/18/test-7'
+    note_id = '2014 1 18 test-7'
     new_note_text = 'New note text.'
     password = 'abc123'
     try:

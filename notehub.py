@@ -111,18 +111,18 @@ class Notehub(object):
     Attributes:
         pid: The publisher ID received from Notehub.org.
         psk: The publisher secret key received from Notehub.org. 
-        version: The api version to use. (Default: '1.0').
+        version: The api version to use. (Default: '1.1').
     """
 
     BASE_URL = 'http://notehub.org/api/note'
 
-    def __init__(self, pid, psk, version='1.0'):
+    def __init__(self, pid, psk, version='1.1'):
         """Constructor for Notehub object.
 
         Args:
             pid: The publisher ID received from Notehub.org.
             psk: The publisher secret key received from Notehub.org.
-            version: Optional. Default '1.0'. Which version of the API to use.
+            version: Optional. Default '1.1'. Which version of the API to use.
         """
         self.pid = pid
         self.psk = psk
@@ -269,12 +269,13 @@ class Notehub(object):
             NotehubError: There was a problem making the call. Check the
                 message.
         """
+        encoded_password = md5(password.encode('utf-8')).hexdigest()
         data = {'noteId': note_id,
                 'note': new_note_text,
                 'pid': self.pid,
                 'signature': self._get_signature(
-                    note_id + new_note_text + password),
-                'password': md5(password.encode('utf-8')).hexdigest(),
+                    note_id + new_note_text + encoded_password),
+                'password': encoded_password,
                 'version': self.version,
             }
         return self._request(data=data)
