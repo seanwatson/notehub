@@ -1,6 +1,13 @@
 notehub
 =======
 
+Installation
+------------
+
+To install run:
+
+    pip install notehub
+
 Getting Started
 ---------------
 
