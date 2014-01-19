@@ -35,7 +35,7 @@ from mock import Mock
 # If set to True and a PID and PSK are provided the tests will make actual HTTP
 # requests to Notehub.org. If it isn't necessary to test with real responses set
 # this to False and sample server responses will be used.
-TEST_AGAINST_LIVE = True
+TEST_AGAINST_LIVE = False
 
 PID = '' # Fill in your PID here to test against the live site
 PSK = '' # Fill in your PSK here to test against the live site
