@@ -37,7 +37,7 @@ Example use:
 
     # get_note
     try:
-        note = nh.get_note('2014 1 18 test-7')
+        note = nh.get_note('2014 1 26 test')
         print(note)
     except NotehubError as e:
         print(e)
@@ -54,14 +54,26 @@ Example use:
     note_text = 'Test note 123.'
     password = 'abc123'
     try:
-        note = nh.create_note(note_text, password)
+        note = nh.create_note(note_text, password=password)
+        print(note)
+    except NotehubError as e:
+        print(e)
+
+    # create_note with specific theme and fonts
+    note_text = 'Test note 123.'
+    theme = 'solarized-light'
+    text_font = 'Alegreya Sans SC'
+    header_font = 'Chau Philomene One'
+    try:
+        note = nh.create_note(note_text, theme=theme, text_font=text_font,
+                              header_font=header_font)
         print(note)
     except NotehubError as e:
         print(e)
 
     # update_note
-    note_id = '2014 1 18 test-7'
-    new_note_text = 'New note text.'
+    note_id = '2014 1 26 test-note-123-1'
+    new_note_text = 'Test note 123.'
     password = 'abc123'
     try:
         note = nh.update_note(note_id, new_note_text, password)

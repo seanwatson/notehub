@@ -2,8 +2,7 @@
 # Author: Sean Watson
 # Date:   19 January 2014
 #
-# Unit tests for notehub.py. These are written to be run with Python2. Python3
-# may not work.
+# Unit tests for notehub.py.
 #
 # License:
 # The MIT License (MIT)
@@ -30,8 +29,13 @@
 from copy import deepcopy
 import json
 import notehub
+import sys
 import unittest
-from mock import Mock
+
+if sys.version_info[0] == 2:
+    from mock import Mock
+else:
+    from unittest.mock import Mock
 
 # If set to True and a PID and PSK are provided the tests will make actual HTTP
 # requests to Notehub.org. If it isn't necessary to test with real responses set
@@ -42,14 +46,14 @@ PID = '' # Fill in your PID here to test against the live site
 PSK = '' # Fill in your PSK here to test against the live site
 
 SAMPLE_GET_NOTE = {u'title': u'Test',
-                   u'statistics': {u'published': u'Sat Jan 18 21:56:58 UTC 2014',
+                   u'statistics': {u'published': u'Sun Jan 26 18:52:37 UTC 2014',
                                    u'edited': None,
                                    u'views': u'34',
-                                   u'publisher': None},
-                   u'publisher': None,
-                   u'note': u'#Test\r\n\r\nThis is a test note\r\n\r\n## Test Header 2',
-                   u'longURL': u'http://notehub.org/2014/1/18/test-7',
-                   u'shortURL': u'http://notehub.org/jk007',
+                                   u'publisher': u'NoteHub'},
+                   u'publisher': u'NoteHub',
+                   u'note': u'Test\r\n====\r\n\r\ntest test',
+                   u'longURL': u'http://notehub.org/2014/1/26/test',
+                   u'shortURL': u'http://notehub.org/vbbql',
                    u'status': {u'success': True,
                                u'message': ''},
                    }
@@ -83,7 +87,7 @@ class TestNotehub(unittest.TestCase):
             mock_response = Mock(status_code=200,
                                  json=lambda: deepcopy(SAMPLE_GET_NOTE))
             notehub.requests.get = Mock(return_value=mock_response)
-        note = self.nh.get_note('2014 1 18 test-7')
+        note = self.nh.get_note('2014 1 26 test')
         expected_note = deepcopy(SAMPLE_GET_NOTE)
         del expected_note['status']
         # Views are subject to change so omit them from the check
@@ -129,6 +133,27 @@ class TestNotehub(unittest.TestCase):
         # Since the date and ID change, just check that a URL comes back
         self.assertEqual('http://notehub.org/', note['longURL'][:19])
         self.assertIn('some-test-text', note['longURL'])
+        self.assertEqual('http://notehub.org/', note['shortURL'][:19])
+        self.assertIn('some-test-text', note['noteID'])
+
+    def test_create_note_with_theme_and_fonts(self):
+        sample_note_with_theme = deepcopy(SAMPLE_CREATE_NOTE)
+        sample_note_with_theme['longURL'] = u'http://notehub.org/2014/1/19/some-test-text-4?header-font=Chau+Philomene+One&text-font=Alegreya+Sans+SC&theme=solarized-light'
+        # If you don't want to test against live just have the request call
+        # return a mock with a 200 response code and the sample json
+        if not (TEST_AGAINST_LIVE and PID and PSK):
+            mock_response = Mock(status_code=200,
+                                 json=lambda: sample_note_with_theme)
+            notehub.requests.post = Mock(return_value=mock_response)
+        note = self.nh.create_note('some test text', theme='solarized-light',
+                                   text_font='Alegreya Sans SC',
+                                   header_font='Chau Philomene One')
+        # Since the date and ID change, just check that a URL comes back
+        self.assertEqual('http://notehub.org/', note['longURL'][:19])
+        self.assertIn('some-test-text', note['longURL'])
+        self.assertIn('theme=solarized-light', note['longURL'])
+        self.assertIn('text-font=Alegreya+Sans+SC', note['longURL'])
+        self.assertIn('header-font=Chau+Philomene+One', note['longURL'])
         self.assertEqual('http://notehub.org/', note['shortURL'][:19])
         self.assertIn('some-test-text', note['noteID'])
 

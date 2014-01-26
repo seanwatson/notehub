@@ -50,7 +50,7 @@ Example use:
 
     # get_note
     try:
-        note = nh.get_note('2014 1 18 test-7')
+        note = nh.get_note('2014 1 26 test')
         print(note)
     except NotehubError as e:
         print(e)
@@ -67,14 +67,26 @@ Example use:
     note_text = 'Test note 123.'
     password = 'abc123'
     try:
-        note = nh.create_note(note_text, password)
+        note = nh.create_note(note_text, password=password)
+        print(note)
+    except NotehubError as e:
+        print(e)
+
+    # create_note with specific theme and fonts
+    note_text = 'Test note 123.'
+    theme = 'solarized-light'
+    text_font = 'Alegreya Sans SC'
+    header_font = 'Chau Philomene One'
+    try:
+        note = nh.create_note(note_text, theme=theme, text_font=text_font,
+                              header_font=header_font)
         print(note)
     except NotehubError as e:
         print(e)
 
     # update_note
-    note_id = '2014 1 18 test-7'
-    new_note_text = 'New note text.'
+    note_id = '2014 1 26 test-note-123-1'
+    new_note_text = 'Test note 123.'
     password = 'abc123'
     try:
         note = nh.update_note(note_id, new_note_text, password)
@@ -105,12 +117,12 @@ class Notehub(object):
     Attributes:
         pid: The publisher ID received from Notehub.org.
         psk: The publisher secret key received from Notehub.org. 
-        version: The api version to use. (Default: '1.1').
+        version: The api version to use. (Default: '1.2').
     """
 
     BASE_URL = 'http://notehub.org/api/note'
 
-    def __init__(self, pid, psk, version='1.1'):
+    def __init__(self, pid, psk, version='1.2'):
         """Constructor for Notehub object.
 
         Args:
@@ -144,33 +156,33 @@ class Notehub(object):
                 contains a string explaining what went wrong.
         """
 
+        # Make the request
+        if method == 'GET':
+            req = requests.get(self.BASE_URL, params=params)
+        elif method == 'POST':
+            req = requests.post(self.BASE_URL, data=data)
+        else: # PUT
+            req = requests.put(self.BASE_URL, data=data)
+
+        # Check the response code
+        if req.status_code != requests.codes.ok:
+            raise NotehubError('Server returned non-200 response code: '
+                                + str(req.status_code))
+
+        # Parse the response
+        resp = req.json()
+
+        # Check the status
         try:
-            # Make the request
-            if method == 'GET':
-                req = requests.get(self.BASE_URL, params=params)
-            elif method == 'POST':
-                req = requests.post(self.BASE_URL, data=data)
-            else: # PUT
-                req = requests.put(self.BASE_URL, data=data)
-
-            # Check the response code
-            if req.status_code != requests.codes.ok:
-                raise NotehubError('Server returned non-200 response code: '
-                                    + str(req.status_code))
-
-            # Parse the response
-            resp = req.json()
-
-            # Check the status
             if resp['status']['success'] != True:
                 raise NotehubError(
                     'Non successful status: ' + resp['status']['message'])
-                
             del resp['status']
-        except (IOError, KeyError, ValueError) as e:
-            # If there is an error opening the connection or deleting the key
-            # wrap the error in a NotehubError and re-raise it.
-            raise NotehubError(str(e))
+        except KeyError:
+            # Sometimes on failure there is no 'status'. 'success' and
+            # 'message' are still there though
+            raise NotehubError(
+                    'Non successful status: ' + resp['message'])
         return resp
 
     def _get_signature(self, text):
@@ -205,7 +217,8 @@ class Notehub(object):
             }
         return self._request('GET', params=params)
 
-    def create_note(self, note_text, password=''):
+    def create_note(self, note_text, password='', theme='', text_font='',
+                    header_font=''):
         """Creates a note on Notehub.org with the given text.
 
         Makes a call to Notehub.orgs CREATE NOTE api. To edit a note later
@@ -215,6 +228,9 @@ class Notehub(object):
         Args:
             note_text: The ID of the note to request.
             password: Optional. A password to allow for updating the note.
+            theme: Optional. The color theme to use.
+            text_font: Optional. Font to use for body text.
+            header_font: Optional. Font to use for header text.
 
         Returns:
             A dict populated from the JSON response of the API call.
@@ -230,6 +246,12 @@ class Notehub(object):
             }
         if password:
             data['password'] = md5(password.encode('utf-8')).hexdigest()
+        if theme:
+            data['theme'] = theme
+        if text_font:
+            data['text-font'] = text_font
+        if header_font:
+            data['header-font'] = header_font
         return self._request('POST', data=data)
 
     def update_note(self, note_id, new_note_text, password):
