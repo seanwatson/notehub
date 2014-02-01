@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Notehub by seanwatson</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/seanwatson/notehub">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/seanwatson/notehub/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/seanwatson/notehub/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Notehub</h1>
+          <p>A basic python wrapper for the Notehub.org API.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/seanwatson">seanwatson</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="notehub" class="anchor" href="#notehub"><span class="octicon octicon-link"></span></a>notehub</h1>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>To install with pip run:</p>
+
+<pre><code>pip install notehub
+</code></pre>
+
+<p>Or you can download the source and run:</p>
+
+<pre><code>python setup.py install
+</code></pre>
+
+<p><em>Running these commands may require administrator privledges.</em></p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>A basic python wrapper for the Notehub.org API that simplifies much of the work
+needed to make a call. The wrapper handles the work of adding necessary
+parameters, hashing passwords, generating signatures, encoding the data and
+checking response codes.</p>
+
+<p><strong>You will need a PID and PSK from <a href="http://notehub.org/api">http://notehub.org/api</a></strong>
+<strong>in order to use the create_note and update_note methods.</strong></p>
+
+<p>Example use:</p>
+
+<pre><code>from notehub import Notehub
+from notehub import NotehubError
+
+PID = 'example_pid' # Replace with your PID
+PSK = 'example_psk' # Replace with your PSK
+
+nh = Notehub(PID, PSK)
+
+# get_note
+try:
+    note = nh.get_note('2014 1 26 test')
+    print(note)
+except NotehubError as e:
+    print(e)
+
+# create_note
+note_text = 'Test note 123.'
+try:
+    note = nh.create_note(note_text)
+    print(note)
+except NotehubError as e:
+    print(e)
+
+# create_note with password
+note_text = 'Test note 123.'
+password = 'abc123'
+try:
+    note = nh.create_note(note_text, password=password)
+    print(note)
+except NotehubError as e:
+    print(e)
+
+# create_note with specific theme and fonts
+note_text = 'Test note 123.'
+theme = 'solarized-light'
+text_font = 'Alegreya Sans SC'
+header_font = 'Chau Philomene One'
+try:
+    note = nh.create_note(note_text, theme=theme, text_font=text_font,
+                          header_font=header_font)
+    print(note)
+except NotehubError as e:
+    print(e)
+
+# update_note
+note_id = '2014 1 26 test-note-123-1'
+new_note_text = 'Test note 123.'
+password = 'abc123'
+try:
+    note = nh.update_note(note_id, new_note_text, password)
+    print(note)
+except NotehubError as e:
+    print(e)
+</code></pre>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p><a href="https://github.com/seanwatson" class="user-mention">@seanwatson</a></p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2014 Sean Watson</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-47667328-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
