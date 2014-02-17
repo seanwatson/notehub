@@ -39,7 +39,7 @@ def main():
 
     # get_note
     try:
-        note = nh.get_note('2014 1 26 test')
+        note = nh.get_note('2014/1/26/test')
         print(note)
     except NotehubError as e:
         print(e)
@@ -74,7 +74,7 @@ def main():
         print(e)
 
     # update_note
-    note_id = '2014 1 26 test-note-123-1'
+    note_id = '2014/1/26/test-note-123-1'
     new_note_text = 'Test note 123.'
     password = 'abc123'
     try:

@@ -60,7 +60,7 @@ SAMPLE_GET_NOTE = {u'title': u'Test',
 
 SAMPLE_CREATE_NOTE = {u'longURL': u'http://notehub.org/2014/1/19/some-test-text-4',
                       u'shortURL': u'http://notehub.org/uzdmy',
-                      u'noteID': u'2014 1 19 some-test-text-4',
+                      u'noteID': u'2014/1/19/some-test-text-4',
                       u'status': {u'success': True,
                                   u'message': ''},
                       }
@@ -87,7 +87,7 @@ class TestNotehub(unittest.TestCase):
             mock_response = Mock(status_code=200,
                                  json=lambda: deepcopy(SAMPLE_GET_NOTE))
             notehub.requests.get = Mock(return_value=mock_response)
-        note = self.nh.get_note('2014 1 26 test')
+        note = self.nh.get_note('2014/1/26/test')
         expected_note = deepcopy(SAMPLE_GET_NOTE)
         del expected_note['status']
         # Views are subject to change so omit them from the check
@@ -164,7 +164,7 @@ class TestNotehub(unittest.TestCase):
             mock_response = Mock(status_code=200,
                                  json=lambda: deepcopy(SAMPLE_UPDATE_NOTE))
             notehub.requests.put = Mock(return_value=mock_response)
-        note = self.nh.update_note('2014 1 18 test-7', 'the new text',
+        note = self.nh.update_note('2014/1/18/test-7', 'the new text',
                                    'abc123')
         expected_note = deepcopy(SAMPLE_UPDATE_NOTE)
         del expected_note['status']
