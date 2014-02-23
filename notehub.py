@@ -117,18 +117,18 @@ class Notehub(object):
     Attributes:
         pid: The publisher ID received from Notehub.org.
         psk: The publisher secret key received from Notehub.org. 
-        version: The api version to use. (Default: '1.3').
+        version: The api version to use. (Default: '1.4').
     """
 
     BASE_URL = 'http://notehub.org/api/note'
 
-    def __init__(self, pid, psk, version='1.3'):
+    def __init__(self, pid, psk, version='1.4'):
         """Constructor for Notehub object.
 
         Args:
             pid: The publisher ID received from Notehub.org.
             psk: The publisher secret key received from Notehub.org.
-            version: Optional. Default '1.3'. Which version of the API to use.
+            version: Optional. Default '1.4'. Which version of the API to use.
         """
         self.pid = pid
         self.psk = psk
